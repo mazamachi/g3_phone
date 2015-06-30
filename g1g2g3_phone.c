@@ -118,9 +118,9 @@ int main(int argc, char *argv[]){
 		complex_to_sample(X, play_data, N);
 		// /* 標準出力へ出力 */
 		// write_n(1, N, send_data);
-		write_n(1, N, play_data);
+		// write_n(1, N, play_data);
 
-		// fwrite(recv_data,sizeof(sample_t),n_recv,fp_play);
+		fwrite(play_data,sizeof(sample_t),N/sizeof(sample_t),fp_play);
 		// write(1,recv_data,n_recv);
 	}
 	close(s);
