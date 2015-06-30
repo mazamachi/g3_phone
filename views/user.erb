@@ -1,0 +1,47 @@
+	<div class="col-md-6">
+		<h2><%=@name%></h2>
+		<div>
+		<span class="user">トータルスコア:<%=@score_c.score%>pt</span>
+		<br>
+		<span class="user">ハイスコア:<%=@score_c.highscore%>pt</span>
+		<br>
+		<span class="user">ハイスコア時の文:<%=@score_c.highest_text%></span>
+		<br>
+		<span class="user">全体での順位:<%=@rank%>/<%=@total_user%></span>
+		</div>
+		<table class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<td>rank</td>
+					<td>user id</td>
+					<td>score</td>
+				</tr>
+			</thead>
+			<tbody>
+			<% @scores.each_with_index do |score_c,i| %>
+				<tr>
+					<td><%=i+1%></td>
+					<td><%=score_c.user_name%></td>
+					<td align="right"><%=score_c.score%></td>
+				</tr>
+			<%end%>
+			<tr>
+				<td align="center">~</td>
+				<td align="center">~</td>
+				<td align="center">~</td>
+			</tr>
+			<% @low_scores.each_with_index do |score_c,i| %>
+				<tr>
+					<td><%=@total_user-@low_scores.length+i+1%></td>
+					<td><%=score_c.user_name%></td>
+					<td align="right"><%=score_c.score%></td>
+				</tr>
+			<%end%>
+			</tbody>
+		</table>
+	</div>
+	<div class="col-md-6">
+
+		<a class="twitter-timeline" href="https://twitter.com/hashtag/%E9%80%A3%E6%8A%95%E3%83%81%E3%83%A3%E3%83%AC%E3%83%B3%E3%82%B8" data-widget-id="545055091166691328">#連投チャレンジ のツイート</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	</div>

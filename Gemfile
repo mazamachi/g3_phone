@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+gem 'pg'
+gem 'sinatra'
+gem 'activerecord'
+gem 'sinatra-activerecord', :require => 'sinatra/activerecord'
+gem 'twitter'
+gem 'oauth'
