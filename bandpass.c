@@ -14,9 +14,6 @@
  */
 
 #include "g123_phone.h"
-#define SAMPLING_FREQEUENCY 44100
-
-
 void die(char * s) {
 	perror(s); 
 	exit(1);
@@ -35,6 +32,21 @@ ssize_t read_n(int fd, ssize_t n, void * buf) {
 	}
 	memset(buf + re, 0, n - re);
 	return re;
+}
+ssize_t fread_n(FILE fd, ssize_t n, void * buf) {
+	ssize_t re = 0;
+	ssize_t r = fread(buf+re, sizeof(char),n,fd);
+	memset(buf + re, 0, n - re);
+	return re;
+}
+ssize_t fwirte_n(FILE fd, ssize_t n, void * buf) {
+	ssize_t wr = 0;
+	while (wr < n) {
+		ssize_t w = fwrite(buf+wr, sizeof(char), n, fd);
+		if (w == -1) die("write");
+		wr += w;
+	}
+	return wr;
 }
 
 /* fdへ, bufからnバイト書く */

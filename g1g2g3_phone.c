@@ -12,7 +12,7 @@
 
 #include "g123_phone.h"
 
-#define N 100000
+#define N 8192
 
 void die(char *s){
 	perror(s);
@@ -21,9 +21,13 @@ void die(char *s){
 
 int main(int argc, char *argv[]){
 	int n,m,n_recv;
-	char *send_data, *recv_data;
-	send_data = malloc(sizeof(char)*N);
-	recv_data = malloc(sizeof(char)*N);
+	sample_t *rec_data, *play_data;
+	int cut_low=300, cut_high=3400;
+	int send_len = (cut_high-cut_low)*N/SAMPLING_FREQEUENCY;
+	rec_data = malloc(sizeof(char)*N);
+	sample_t * send_data = malloc(sizeof(char)*send_len);
+	sample_t * recv_data = malloc(sizeof(char)*send_len);
+	play_data = malloc(sizeof(char)*N);
 
 	int s,ss;
 	struct sockaddr_in addr; // addres information for bin
@@ -73,8 +77,19 @@ int main(int argc, char *argv[]){
 		die("popen:play");
 	}
 
+	complex double * X = calloc(sizeof(complex double), N);
+	complex double * Y = calloc(sizeof(complex double), N);
+
 	while(1){
-		n=fread(send_data,sizeof(char),N,fp_rec);
+		// ssize_t m = fread_n(*fp_rec, n * sizeof(sample_t), rec_data);
+		n=fread(rec_data,sizeof(char),N,fp_rec);
+		memset(rec_data+n,0.N-n)
+		sample_to_complex(rec_data, X, n);
+		/* FFT -> Y */
+		fft(X, Y, n);
+		complex_to_sample(Y, send_data, n);
+		/* 標準出力へ出力 */
+		// fwrite_n(1, m, buf);
 		if(send(s,send_data,n,0)==-1){
 			die("send");
 		}

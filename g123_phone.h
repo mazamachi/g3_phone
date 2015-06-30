@@ -7,10 +7,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#define SAMPLING_FREQEUENCY 44100
 typedef short sample_t;
 
 void die(char * s) ;
-ssize_t read_n(int fd, ssize_t n, void * buf);
+ssize_t fread_n(FILE fd, ssize_t n, void * buf);
 ssize_t write_n(int fd, ssize_t n, void * buf);
 void sample_to_complex(sample_t * s, 
 					complex double * X, 
