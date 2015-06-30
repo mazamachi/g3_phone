@@ -160,9 +160,9 @@ int _main(int argc, char ** argv) {
 			}
 		}
 		/* IFFT -> Z */
-		// ifft(Y, X, n);
+		ifft(Y, X, n);
 		/* 標本の配列に変換 */
-		complex_to_sample(Y, buf, n);
+		complex_to_sample(X, buf, n);
 		/* 標準出力へ出力 */
 		write_n(1, m, buf);
 	}

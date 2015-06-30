@@ -12,8 +12,17 @@
  * したがって「ほぼ何もしない」フィルタになる
  * 
  */
+#include <assert.h>
+#include <complex.h>
+#include <math.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#define SAMPLING_FREQEUENCY 44100
 
-#include "g123_phone.h"
+typedef short sample_t;
+
 void die(char * s) {
 	perror(s); 
 	exit(1);
@@ -33,21 +42,21 @@ ssize_t read_n(int fd, ssize_t n, void * buf) {
 	memset(buf + re, 0, n - re);
 	return re;
 }
-ssize_t fread_n(FILE fd, ssize_t n, void * buf) {
-	ssize_t re = 0;
-	ssize_t r = fread(buf+re, sizeof(char),n,fd);
-	memset(buf + re, 0, n - re);
-	return re;
-}
-ssize_t fwirte_n(FILE fd, ssize_t n, void * buf) {
-	ssize_t wr = 0;
-	while (wr < n) {
-		ssize_t w = fwrite(buf+wr, sizeof(char), n, fd);
-		if (w == -1) die("write");
-		wr += w;
-	}
-	return wr;
-}
+// ssize_t fread_n(FILE fd, ssize_t n, void * buf) {
+// 	ssize_t re = 0;
+// 	ssize_t r = fread(buf+re, sizeof(char),n,fd);
+// 	memset(buf + re, 0, n - re);
+// 	return re;
+// }
+// ssize_t fwirte_n(FILE fd, ssize_t n, void * buf) {
+// 	ssize_t wr = 0;
+// 	while (wr < n) {
+// 		ssize_t w = fwrite(buf+wr, sizeof(char), n, fd);
+// 		if (w == -1) die("write");
+// 		wr += w;
+// 	}
+// 	return wr;
+// }
 
 /* fdへ, bufからnバイト書く */
 ssize_t write_n(int fd, ssize_t n, void * buf) {
@@ -159,14 +168,14 @@ int main(int argc, char ** argv) {
 		/* FFT -> Y */
 		fft(X, Y, n);
 		// Yのバンド外を0にする
-		t = (double) n / SAMPLING_FREQEUENCY;
-		for (i = 0; i < n; ++i){
-			if(i/t<low || i/t>high){
-				Y[i] = 0;
-			}
-		}
+		// t = (double) n / SAMPLING_FREQEUENCY;
+		// for (i = 0; i < n; ++i){
+		// 	if(i/t<low || i/t>high){
+		// 		Y[i] = 0;
+		// 	}
+		// }
 		/* IFFT -> Z */
-		// ifft(Y, X, n);
+		ifft(Y, X, n);
 		/* 標本の配列に変換 */
 		complex_to_sample(Y, buf, n);
 		/* 標準出力へ出力 */

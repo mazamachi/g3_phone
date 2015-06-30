@@ -19,15 +19,10 @@
 // 	exit(1);
 // }
 
+// int fread_n(char *m, int size, int n, void *)
+
 int main(int argc, char *argv[]){
 	int n,m,n_recv;
-	sample_t *rec_data, *play_data;
-	int cut_low=300, cut_high=3400;
-	int send_len = (cut_high-cut_low)*N/SAMPLING_FREQEUENCY;
-	rec_data = malloc(sizeof(char)*N);
-	sample_t * send_data = malloc(sizeof(char)*send_len);
-	sample_t * recv_data = malloc(sizeof(char)*send_len);
-	play_data = malloc(sizeof(char)*N);
 
 	int s,ss;
 	struct sockaddr_in addr; // addres information for bin
@@ -77,26 +72,55 @@ int main(int argc, char *argv[]){
 		die("popen:play");
 	}
 
+	// sample_t *rec_data, *play_data;
+	int cut_low=300, cut_high=3400;
+	int send_len = (cut_high-cut_low)*N/SAMPLING_FREQEUENCY;
+	sample_t * rec_data = malloc(sizeof(sample_t)*N);
+	// sample_t * send_data = malloc(sizeof(sample_t)*send_len);
+	// sample_t * recv_data = malloc(sizeof(sample_t)*send_len);
+	sample_t * play_data = malloc(sizeof(sample_t)*N);
 	complex double * X = calloc(sizeof(complex double), N);
 	complex double * Y = calloc(sizeof(complex double), N);
 
+	int re=0, r;
 	while(1){
 		// ssize_t m = fread_n(*fp_rec, n * sizeof(sample_t), rec_data);
-		n=fread(rec_data,sizeof(char),N,fp_rec);
-		memset(rec_data+n,0,N-n);
-		sample_to_complex(rec_data, X, n);
-		/* FFT -> Y */
-		fft(X, Y, n);
-		complex_to_sample(Y, send_data, n);
-		/* 標準出力へ出力 */
-		// fwrite_n(1, m, buf);
-		if(send(s,send_data,n,0)==-1){
+		// 必ずNバイト読む
+		re = 0;
+		while(re<N){
+			r=fread(rec_data+re,sizeof(sample_t),N/sizeof(sample_t)-re,fp_rec);
+			if(r==-1) die("fread");
+			if(r==0) break;
+			re += r;
+		}
+		// n=fread(rec_data,sizeof(sample_t),N/sizeof(sample_t),fp_rec);
+		// re = 0;
+		// re = fread(rec_data,sizeof(sample_t), N-re, fp_rec);
+		memset(rec_data+re,0,N-re);
+		// 複素数の配列に変換
+		sample_to_complex(rec_data, X, N);
+		// /* FFT -> Y */
+		fft(X, Y, N);
+
+		// Yの一部を送る
+		if(send(s,Y+cut_low*N/SAMPLING_FREQEUENCY,send_len,0)==-1){
 			die("send");
 		}
-		if((n_recv=recv(s,recv_data,N,0))==-1){
+
+		memset(Y,0,N);
+		if(recv(s,Y+cut_low*N/SAMPLING_FREQEUENCY,send_len,0)==-1){
 			die("recv");
 		}
-		fwrite(recv_data,sizeof(char),n_recv,fp_play);
+		// /* IFFT -> Z */
+		ifft(Y, X, N);
+
+		// // 標本の配列に変換
+		complex_to_sample(X, play_data, N);
+		// /* 標準出力へ出力 */
+		// write_n(1, N, send_data);
+		write_n(1, N, play_data);
+
+		// fwrite(recv_data,sizeof(sample_t),n_recv,fp_play);
 		// write(1,recv_data,n_recv);
 	}
 	close(s);
