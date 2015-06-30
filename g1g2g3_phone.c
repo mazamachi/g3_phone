@@ -10,14 +10,14 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include "g123_phone.h"
+#include "bandpass_fft.h"
 
 #define N 8192
 
-void die(char *s){
-	perror(s);
-	exit(1);
-}
+// void die(char *s){
+// 	perror(s);
+// 	exit(1);
+// }
 
 int main(int argc, char *argv[]){
 	int n,m,n_recv;
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]){
 	while(1){
 		// ssize_t m = fread_n(*fp_rec, n * sizeof(sample_t), rec_data);
 		n=fread(rec_data,sizeof(char),N,fp_rec);
-		memset(rec_data+n,0.N-n)
+		memset(rec_data+n,0,N-n);
 		sample_to_complex(rec_data, X, n);
 		/* FFT -> Y */
 		fft(X, Y, n);
