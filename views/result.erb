@@ -1,0 +1,65 @@
+
+	<div class="col-md-6 result">
+	<%if @blocked==[]%>
+		<h1 class="success">Success</h1>
+		<span>おめでとうございます！！<%=@content%>チャレンジ成功です</span>
+	<%else%>
+		<h1 class="failure">Failure</h1>
+		<span>残念でした…<%=@content%>チャレンジ失敗です</span>
+	<%end%>
+	<br>
+	<span>取得ポイント：<%=@point%>pt</span>
+	<br>
+	<span>現在のポイント：<%=@point_after%>pt</span>
+	<%if @highscore%>
+		<h3>ハイスコア更新！</h3>
+	<%end%>
+	<br>
+	<span>
+		<%=@user.screen_name%>さんのハイスコア:<%=@score_c.highscore%>pt<br>
+		その時のツイート:(<%=@score_c.highest_text%>)
+	</span>
+	<br>
+	<button id="destroy" type="submit" class="btn-lg btn-danger">連投ツイート削除</button>
+<!-- 	<form method="post" action="/destroy" class="navbar-center">
+			<button type="submit" class="btn-lg btn-warning">連投ツイート削除</button>
+	</form> -->
+	<div id="destroyed_alert"></div>
+	<h2><a href="/challenge">もう一度</a></h2>
+	<!-- <button type="button" class="btn btn-warning btn-lg" onClick="location.href='/destroy'">連投ツイート削除</button> -->
+	<h2><a href="/user/<%=@user.screen_name%>">マイページ</a></h2>
+	<!-- recAd -->
+	<ins class="adsbygoogle"
+	     style="display:inline-block;width:336px;height:280px"
+	     data-ad-client="ca-pub-4934228485841002"
+	     data-ad-slot="1023628373"></ins>
+	<script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+	</script>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+	</div>
+	<div class="col-md-6">
+		<%@tweets.each do |twe|%>
+			<div class="tweet <%="bg-danger" if @blocked.include?(twe.id) %><%="bg-success" if @updated_ids.include?(twe.id)%>">
+				<div class="icon"><img src="<%=twe.user.profile_image_url%>" width="40px" height="40px" class="img-rounded"></div>
+				<div class="content">
+					<span class="user_name"><%=twe.user.name%></span>
+					<span class="user_id">@<%=twe.user.screen_name%></span>
+					<br>
+					<span><%=twe.text%></span>
+					<br>
+					<span class="time">posted at <%=twe.created_at%></span>
+				</div>
+				<div class="clear"></div>
+			</div>
+		<%end%>
+	</div>
+	<script>
+	  $(function() {
+	    $('#destroy').click(function() {
+	      $.post('/destroy', function(ret) { 
+	        $('#destroyed_alert').text(ret);
+	      });
+	    });
+	  });
+  </script>

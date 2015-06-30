@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>5_lecture</title>
+    <style type="text/css">
+    html{font-family: sans-serif;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%}body{margin: 0}article,aside,details,figcaption,figure,footer,header,hgroup,main,nav,section,summary{display: block}audio,canvas,progress,video{display: inline-block;vertical-align: baseline}audio:not([controls]){display: none;height: 0}[hidden],template{display: none}a{background: transparent}a:active,a:hover{outline: 0}abbr[title]{border-bottom: 1px dotted}b,strong{font-weight: bold}dfn{font-style: italic}h1{font-size: 2em;margin: 0.67em 0}mark{background: #ff0;color: #000}small{font-size: 80%}sub,sup{font-size: 75%;line-height: 0;position: relative;vertical-align: baseline}sup{top: -0.5em}sub{bottom: -0.25em}img{border: 0}svg:not(:root){overflow: hidden}figure{margin: 1em 40px}hr{box-sizing: content-box;height: 0}pre{overflow: auto}code,kbd,pre,samp{font-family: monospace, monospace;font-size: 1em}button,input,optgroup,select,textarea{color: inherit;font: inherit;margin: 0}button{overflow: visible}button,select{text-transform: none}button,html input[type="button"],input[type="reset"],input[type="submit"]{-webkit-appearance: button;cursor: pointer}button[disabled],html input[disabled]{cursor: default}button::-moz-focus-inner,input::-moz-focus-inner{border: 0;padding: 0}input{line-height: normal}input[type="checkbox"],input[type="radio"]{box-sizing: border-box;padding: 0}input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button{height: auto}input[type="search"]{-webkit-appearance: textfield;box-sizing: content-box}input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit-search-decoration{-webkit-appearance: none}fieldset{border: 1px solid #c0c0c0;margin: 0 2px;padding: 0.35em 0.625em 0.75em}legend{border: 0;padding: 0}textarea{overflow: auto}optgroup{font-weight: bold}table{border-collapse: collapse;border-spacing: 0}td,th{padding: 0}*{box-sizing: border-box}input,select,textarea,button{font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"}body{min-width: 1020px;font: 13px/1.4 Helvetica, arial, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";color: #333;background-color: #fff}a{color: #4183c4;text-decoration: none}a:hover,a:active{text-decoration: underline}hr,.rule{height: 0;margin: 15px 0;overflow: hidden;background: transparent;border: 0;border-bottom: 1px solid #ddd}hr:before,.rule:before{display: table;content: ""}hr:after,.rule:after{display: table;clear: both;content: ""}h1,h2,h3,h4,h5,h6{margin-top: 15px;margin-bottom: 15px;line-height: 1.1}h1{font-size: 30px}h2{font-size: 21px}h3{font-size: 16px}h4{font-size: 14px}h5{font-size: 12px}h6{font-size: 11px}small{font-size: 90%}blockquote{margin: 0}.lead{margin-bottom: 30px;font-size: 20px;font-weight: 300;color: #555}.text-muted{color: #999}.text-danger{color: #bd2c00}.text-emphasized{font-weight: bold;color: #333}ul,ol{padding: 0;margin-top: 0;margin-bottom: 0}ol ol,ul ol{list-style-type: lower-roman}ul ul ol,ul ol ol,ol ul ol,ol ol ol{list-style-type: lower-alpha}dd{margin-left: 0}tt,code{font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;font-size: 12px}pre{margin-top: 0;margin-bottom: 0;font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace}#realtime .status{overflow: visible;position: absolute;top: -5px;left: 0;background: url("/public/images/github-status.png");width: 26px;height: 26px;display: block;margin: 0 5px 0 0}#realtime .up{background-position: 0 0}#realtime .problem{background-position: 0 -53px}#realtime .down{background-position: 0 -26px}.container{max-width: 920px;margin: 0 auto 20px auto}#header{background: #FAFAFA;background: -moz-linear-gradient(#FAFAFA, #EAEAEA);background: -webkit-linear-gradient(#FAFAFA, #EAEAEA);-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa', endColorstr='#eaeaea')";border-bottom: 1px solid #CACACA;box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4),0 0 10px rgba(0, 0, 0, 0.1)}#markup{padding: 3px}#markup article{padding-top: 30px}.markdown-body{overflow: hidden;font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;font-size: 16px;line-height: 1.6;word-wrap: break-word}.markdown-body>*:first-child{margin-top: 0 !important}.markdown-body>*:last-child{margin-bottom: 0 !important}.markdown-body .absent{color: #c00}.markdown-body .anchor{position: absolute;top: 0;left: 0;display: block;padding-right: 6px;padding-left: 30px;margin-left: -30px}.markdown-body .anchor:focus{outline: none}.markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4,.markdown-body h5,.markdown-body h6{position: relative;margin-top: 1em;margin-bottom: 16px;font-weight: bold;line-height: 1.4}.markdown-body h1 .octicon-link,.markdown-body h2 .octicon-link,.markdown-body h3 .octicon-link,.markdown-body h4 .octicon-link,.markdown-body h5 .octicon-link,.markdown-body h6 .octicon-link{display: none;color: #000;vertical-align: middle}.markdown-body h1:hover .anchor,.markdown-body h2:hover .anchor,.markdown-body h3:hover .anchor,.markdown-body h4:hover .anchor,.markdown-body h5:hover .anchor,.markdown-body h6:hover .anchor{padding-left: 8px;margin-left: -30px;text-decoration: none}.markdown-body h1:hover .anchor .octicon-link,.markdown-body h2:hover .anchor .octicon-link,.markdown-body h3:hover .anchor .octicon-link,.markdown-body h4:hover .anchor .octicon-link,.markdown-body h5:hover .anchor .octicon-link,.markdown-body h6:hover .anchor .octicon-link{display: inline-block}.markdown-body h1 tt,.markdown-body h1 code,.markdown-body h2 tt,.markdown-body h2 code,.markdown-body h3 tt,.markdown-body h3 code,.markdown-body h4 tt,.markdown-body h4 code,.markdown-body h5 tt,.markdown-body h5 code,.markdown-body h6 tt,.markdown-body h6 code{font-size: inherit}.markdown-body h1{padding-bottom: 0.3em;font-size: 2.25em;line-height: 1.2;border-bottom: 1px solid #eee}.markdown-body h1 .anchor{line-height: 1}.markdown-body h2{padding-bottom: 0.3em;font-size: 1.75em;line-height: 1.225;border-bottom: 1px solid #eee}.markdown-body h2 .anchor{line-height: 1}.markdown-body h3{font-size: 1.5em;line-height: 1.43}.markdown-body h3 .anchor{line-height: 1.2}.markdown-body h4{font-size: 1.25em}.markdown-body h4 .anchor{line-height: 1.2}.markdown-body h5{font-size: 1em}.markdown-body h5 .anchor{line-height: 1.1}.markdown-body h6{font-size: 1em;color: #777}.markdown-body h6 .anchor{line-height: 1.1}.markdown-body p,.markdown-body blockquote,.markdown-body ul,.markdown-body ol,.markdown-body dl,.markdown-body table,.markdown-body pre{margin-top: 0;margin-bottom: 16px}.markdown-body hr{height: 4px;padding: 0;margin: 16px 0;background-color: #e7e7e7;border: 0 none}.markdown-body ul,.markdown-body ol{padding-left: 2em}.markdown-body ul.no-list,.markdown-body ol.no-list{padding: 0;list-style-type: none}.markdown-body ul ul,.markdown-body ul ol,.markdown-body ol ol,.markdown-body ol ul{margin-top: 0;margin-bottom: 0}.markdown-body li>p{margin-top: 16px}.markdown-body dl{padding: 0}.markdown-body dl dt{padding: 0;margin-top: 16px;font-size: 1em;font-style: italic;font-weight: bold}.markdown-body dl dd{padding: 0 16px;margin-bottom: 16px}.markdown-body blockquote{padding: 0 15px;color: #777;border-left: 4px solid #ddd}.markdown-body blockquote>:first-child{margin-top: 0}.markdown-body blockquote>:last-child{margin-bottom: 0}.markdown-body table{display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all}.markdown-body table th{font-weight: bold}.markdown-body table th,.markdown-body table td{padding: 6px 13px;border: 1px solid #ddd}.markdown-body table tr{background-color: #fff;border-top: 1px solid #ccc}.markdown-body table tr:nth-child(2n){background-color: #f8f8f8}.markdown-body img{max-width: 100%;box-sizing: border-box}.markdown-body span.frame{display: block;overflow: hidden}.markdown-body span.frame>span{display: block;float: left;width: auto;padding: 7px;margin: 13px 0 0;overflow: hidden;border: 1px solid #ddd}.markdown-body span.frame span img{display: block;float: left}.markdown-body span.frame span span{display: block;padding: 5px 0 0;clear: both;color: #333}.markdown-body span.align-center{display: block;overflow: hidden;clear: both}.markdown-body span.align-center>span{display: block;margin: 13px auto 0;overflow: hidden;text-align: center}.markdown-body span.align-center span img{margin: 0 auto;text-align: center}.markdown-body span.align-right{display: block;overflow: hidden;clear: both}.markdown-body span.align-right>span{display: block;margin: 13px 0 0;overflow: hidden;text-align: right}.markdown-body span.align-right span img{margin: 0;text-align: right}.markdown-body span.float-left{display: block;float: left;margin-right: 13px;overflow: hidden}.markdown-body span.float-left span{margin: 13px 0 0}.markdown-body span.float-right{display: block;float: right;margin-left: 13px;overflow: hidden}.markdown-body span.float-right>span{display: block;margin: 13px auto 0;overflow: hidden;text-align: right}.markdown-body code,.markdown-body tt{padding: 0;padding-top: 0.2em;padding-bottom: 0.2em;margin: 0;font-size: 85%;background-color: rgba(0,0,0,0.04);border-radius: 3px}.markdown-body code:before,.markdown-body code:after,.markdown-body tt:before,.markdown-body tt:after{letter-spacing: -0.2em;content: "\00a0"}.markdown-body code br,.markdown-body tt br{display: none}.markdown-body del code{text-decoration: inherit}.markdown-body pre>code{padding: 0;margin: 0;font-size: 100%;word-break: normal;white-space: pre;background: transparent;border: 0}.markdown-body .highlight{margin-bottom: 16px}.markdown-body .highlight pre,.markdown-body pre{padding: 16px;overflow: auto;font-size: 85%;line-height: 1.45;background-color: #f7f7f7;border-radius: 3px}.markdown-body .highlight pre{margin-bottom: 0;word-break: normal}.markdown-body pre{word-wrap: normal}.markdown-body pre code,.markdown-body pre tt{display: inline;max-width: initial;padding: 0;margin: 0;overflow: initial;line-height: inherit;word-wrap: normal;background-color: transparent;border: 0}.markdown-body pre code:before,.markdown-body pre code:after,.markdown-body pre tt:before,.markdown-body pre tt:after{content: normal}.markdown-body kbd{display: inline-block;padding: 3px 5px;font-size: 11px;line-height: 10px;color: #555;vertical-align: middle;background-color: #fcfcfc;border: solid 1px #ccc;border-bottom-color: #bbb;border-radius: 3px;box-shadow: inset 0 -1px 0 #bbb}.codehilite{background: #ffffff}.codehilite .c{color: #999988;font-style: italic}.codehilite .err{color: #a61717;background-color: #e3d2d2}.codehilite .k{color: #000000;font-weight: bold}.codehilite .o{color: #000000;font-weight: bold}.codehilite .cm{color: #999988;font-style: italic}.codehilite .cp{color: #999999;font-weight: bold}.codehilite .c1{color: #999988;font-style: italic}.codehilite .cs{color: #999999;font-weight: bold;font-style: italic}.codehilite .gd{color: #000000;background-color: #ffdddd}.codehilite .gd .x{color: #000000;background-color: #ffaaaa}.codehilite .ge{color: #000000;font-style: italic}.codehilite .gr{color: #aa0000}.codehilite .gh{color: #999999}.codehilite .gi{color: #000000;background-color: #ddffdd}.codehilite .gi .x{color: #000000;background-color: #aaffaa}.codehilite .go{color: #888888}.codehilite .gp{color: #555555}.codehilite .gs{font-weight: bold}.codehilite .gu{color: #aaaaaa}.codehilite .gt{color: #aa0000}.codehilite .kc{color: #000000;font-weight: bold}.codehilite .kd{color: #000000;font-weight: bold}.codehilite .kp{color: #000000;font-weight: bold}.codehilite .kr{color: #000000;font-weight: bold}.codehilite .kt{color: #445588;font-weight: bold}.codehilite .m{color: #009999}.codehilite .s{color: #d14}.codehilite .na{color: #008080}.codehilite .nb{color: #0086B3}.codehilite .nc{color: #445588;font-weight: bold}.codehilite .no{color: #008080}.codehilite .ni{color: #800080}.codehilite .ne{color: #990000;font-weight: bold}.codehilite .nf{color: #990000;font-weight: bold}.codehilite .nn{color: #555555}.codehilite .nt{color: #000080}.codehilite .nv{color: #008080}.codehilite .ow{color: #000000;font-weight: bold}.codehilite .w{color: #bbbbbb}.codehilite .mf{color: #009999}.codehilite .mh{color: #009999}.codehilite .mi{color: #009999}.codehilite .mo{color: #009999}.codehilite .sb{color: #d14}.codehilite .sc{color: #d14}.codehilite .sd{color: #d14}.codehilite .s2{color: #d14}.codehilite .se{color: #d14}.codehilite .sh{color: #d14}.codehilite .si{color: #d14}.codehilite .sx{color: #d14}.codehilite .sr{color: #009926}.codehilite .s1{color: #d14}.codehilite .ss{color: #990073}.codehilite .bp{color: #999999}.codehilite .vc{color: #008080}.codehilite .vg{color: #008080}.codehilite .vi{color: #008080}.codehilite .il{color: #009999}
+    </style>
+    <style type="text/css">
+      .markdown-body hr{background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAECAYAAACtBE5DAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6OENDRjNBN0E2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6OENDRjNBN0I2NTZBMTFFMEI3QjRBODM4NzJDMjlGNDgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo4Q0NGM0E3ODY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo4Q0NGM0E3OTY1NkExMUUwQjdCNEE4Mzg3MkMyOUY0OCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PqqezsUAAAAfSURBVHjaYmRABcYwBiM2QSA4y4hNEKYDQxAEAAIMAHNGAzhkPOlYAAAAAElFTkSuQmCC")}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="markup">
+        <article id="content" class="markdown-body">
+          <h1>第五回 マイクロソフトの検索エンジン開発とクラウド・モバイル世界でのサバイバル</h1>
+<p>マイクロソフトディベロップメント株式会社<br>
+サイトマネージャーサーチテクノロジーセンター・ジャパン ヤマモトジン</p>
+<h2>本日の内容</h2>
+<ol>
+<li>マイクロソフトの危機</li>
+<li>クラウド・モバイル業界とは？</li>
+<li>サバイバルについて</li>
+</ol>
+<h2>自己紹介</h2>
+<ul>
+<li>アメリカ国籍……  </li>
+<li>大学院では素粒子物理学(プログラミングはFortranだけ)</li>
+<li>検索エンジンに係る仕事</li>
+</ul>
+<h2>マイクロソフトの危機</h2>
+<h3>新しいCEO サティア・ナデラ</h3>
+<p>社長就任時社員に送ったメッセージ<br>
+「この業界では伝統は重視されない、確信のみが重要だ。」<br>
+→彼が社長に就任した時に以下に危機状態に陥っていたかを示す</p>
+<p>実際、業績はおおよそ右肩上がりなので、
+「危機」と言われても時間のわかない人は多いはず</p>
+<p>しかし、PC→スマホや、ソフト→アプリなどなど、新しい環境に移行しつつある。<br>
+デスクトップでは強くても、<strong>日常に使われているデバイス</strong>でのシェアは10%行かないのではないか？</p>
+<p>毎日使うもの、家族に薦めたもの、行列してでも欲しいもの、革新的と聞いて思い浮かぶもの、としてマイクロソフト製品があげられることはほぼ無い。<br>
+→<strong>マインドシェアが小さい</strong></p>
+<p>一番大きな理由は、<strong>社会がモバイル・クラウドに移行したこと</strong></p>
+<h3>クラウド・モバイルのセカイとは？</h3>
+<ul>
+<li>PushからPullへの移行</li>
+<li>ビッグデータと機械学習</li>
+<li>コンピューティングのコモディティ化<br>
+誰でも手に入れることができる</li>
+<li>エコシステムと口コミ  </li>
+</ul>
+<h3>PushからPullへの移行</h3>
+<p>ユーザーには夢の様な世界(開発者にとっては悪夢)  </p>
+<ul>
+<li>ニーズを満たせないものは使われない<br>
+…ユーザーに(今は)強制することが出来ない  </li>
+<li>ユーザの反応を反映できる<br>
+…反映されて当然と考えられている</li>
+<li>「作り上げたものを使わせる」から「作ったものを自由に使ってもらう」<br>
+…Push思考で作ってもPull使用される保証がない</li>
+<li>リソースの限界はユーザの時間のみ
+(ユーザーにとってやりたいことは多いので、それを超えなければいけない)</li>
+</ul>
+<h4>移行の例</h4>
+<ul>
+<li>ソフトウェア→Web→アプリ  </li>
+<li>検索エンジン<br>
+    ユーザーの入力した検索ワードを使って、欲しいものを予測するしか無い</li>
+<li>A/Bテスティング<br>
+    同じ機能だが別のバージョンを数％に使ってもらうことで、ユーザーの評価を取ることができる。</li>
+<li>BYOD<br>
+    マイクロソフトではiPhone使ってOK<br>
+    「社員だから〜」的発想はない</li>
+</ul>
+<h3>ビッグデータと機械学習</h3>
+<ul>
+<li>情報にまつわる大飛躍の発明<ul>
+<li>紙：記録</li>
+<li>印刷機：拡散</li>
+<li>コピー機：複製</li>
+</ul>
+</li>
+<li>デジタル化が更に可能にしたこと<ul>
+<li>より早く、より幅広く拡散<br>
+(ex:twitterの炎上<br>
+ 消したくても消せない)</li>
+<li>半永久的に保存</li>
+<li>検索／分析など情報活用</li>
+</ul>
+</li>
+</ul>
+<p>→デジタル化によって<strong>情報が媒体に依存しなくなった</strong></p>
+<ul>
+<li>増え続けるデータの種類<ul>
+<li>ウェブサイト・アプリ<br>
+web:どのような情報をユーザーが欲しがっているか<br>
+アプリ:どのように使ったか</li>
+<li>スマホ<br>
+どのような行動をしたか(取ることもできる)</li>
+<li>IoT(モノのインターネット)<br>
+ex:ドアの鍵を閉めたかネットで確認など</li>
+</ul>
+</li>
+<li>膨大なデータの量<ul>
+<li>IoTとIPV6<br>
+それぞれのモノにIPアドレスを付ける必要がある。<br>
+(地球上のすべての原子に100個つけてもまだ大丈夫)<br>
+→情報量が多すぎるのではないか？</li>
+<li>インターネット = タンカー１隻(?)<br>
+最近のmicroSDの製造量から推定すると、タンカー１隻でも収まる<br>
+→<strong>IPV6を使ったとしても、情報が多すぎて余るということはない</strong></li>
+</ul>
+</li>
+</ul>
+<h4>How-Old.net</h4>
+<p>簡単そうに見えるwebサイトにも、画像認識やビッグデータの活用などが為されている。<br>
+→これ自体の利便性は少ないかもしれないが、今後様々なシステムに利用できるようになるはず</p>
+<ul>
+<li>機械学習の実用例<ul>
+<li>数字認識</li>
+<li>クレジットカードの不正感知</li>
+<li>おすすめ商品</li>
+</ul>
+</li>
+</ul>
+<h3>コンピューティンゴのコモディティ化</h3>
+<ul>
+<li>処理能力・記憶容量<br>
+    2015年の数万円のスマホ=90年代のスパコン<br>
+    ムーアの法則</li>
+<li>システム形状<br>
+    デスクトップ→ラップトップ→スマホ・タブレット<br>
+<strong>どんどん小型化</strong></li>
+<li>マンマシンインターフェース<br>
+    キーボード→マウス→タッチ・音声<br>
+<strong>より直感的に</strong></li>
+<li>通信速度<br>
+<strong>どんどん速く</strong></li>
+</ul>
+<p>ソフトウェアの開発・運用・維持について
+<em> パッケージソフト→ウェブサイト→アプリ
+</em> クラウドサービス
+    + 低価格化するストレージ及び運用・維持費
+    + 並列分散処理・期会がクシュ；自然言語処理など
++ 市場・製品調査 → A/Bテストｚ；アプリ テレメトリ・口コミ</p>
+<p>販売経路の拡大
+* 店舗・通信販売→ダウンロード販売→インターネット広告・SEO→アプリストア</p>
+<h3>エコシステムと口コミ</h3>
+<p>First Mover Advantage(FMA)<br>
+一番手と二番手の違いは最初か次か<br>
+→その違いが決定的<br>
+<strong>理由</strong>：  </p>
+<ul>
+<li>データの質・量(ex:検索エンジン googleなど)</li>
+<li>ネットワーク外部性(SNS facebookなど)</li>
+<li>ユーザーとデベロッパーの収穫加速関係(スマホアプリ)<br>
+    ユーザーが来ないとデベロッパーも開発をしてくれない<br>
+    デベロッパーがいいものを作らないとユーザーが増えない</li>
+</ul>
+<p><strong>エコシステム内の摩擦</strong></p>
+<ul>
+<li>ユーザーと…</li>
+<li>デベロッパーと…</li>
+<li>既存のインフラと…</li>
+</ul>
+<p>例 </p>
+<ul>
+<li>アプリストアでの課金システム<br>
+    一々お金を払うことなく課金しておく場を作った</li>
+<li>iModeとiPhoneのブラウザ<br>
+    iModeのようにそれぞれのデバイスに対する対応を考えることなく、開発することができる</li>
+<li>LINE：電話番号とアドレス帳<br>
+    従来のID制ではなく、電話番号というユニークなものを使用し、電話帳からインポートすることで、既存の電話番号をうまく利用</li>
+</ul>
+<p>製品企画</p>
+<ul>
+<li>「想定のユーザー」→「新聞の見出し」→「口コミ」<br>
+ex:amazon<br>
+新聞の見出しがどうなるか考えてから作られる<br>
+→しかし、その想定が当たるかわからないので、口コミを重視すべき  <ul>
+<li>想定のユーザーは本当のユーザーではないリスクが有る</li>
+<li>新聞の見出しは広範囲に拡散されるが、それでもPushモード</li>
+</ul>
+</li>
+<li>FMA場で口コミを活かすと効果的<ul>
+<li>ただしバイラル効果を狙う、その内容を操作するのは至難の業</li>
+</ul>
+</li>
+</ul>
+<h2>サバイバルに向けて</h2>
+<ul>
+<li>走りながら考える </li>
+<li>完成より改善<br>
+(これらはbingで学んだこと)</li>
+<li>本質の捉え方<br>
+(大学院で学んだこと)</li>
+</ul>
+<h3>bing</h3>
+<p>bing:microsoftの検索エンジン<br>
+日本ではGoogleとヤフーでシェアが半々</p>
+<h4>bingの意義・役割</h4>
+<ul>
+<li>検索エンジン開発によって育まれたノウハウ・経験<ul>
+<li>ビッグデータの活用</li>
+<li>クラウドのサービス展開法</li>
+</ul>
+</li>
+<li>Microsoft全体で重宝されている<ul>
+<li>データセンター管理→Outlook.com運営<br>
+データセンター管理は時間も手間もかかるので対処するためにoutlookというサービスが生まれた</li>
+<li>並列分散処理→Azureでの展開</li>
+<li>検索用語候補の表示機能→インプットメソッドエディタの活用<br>
+    ユーザが渡してくる情報(新語など)をIMEに入れる<br>
+    例：ファイル検索の綴りの修正を、検索エンジンで集めたデータによって開発</li>
+</ul>
+</li>
+</ul>
+<h4>bingでの開発状況</h4>
+<ul>
+<li>一般の開発とbingの違い<ul>
+<li>ユーザーの要望に対応する義務</li>
+<li>リリース後すぐに使用されるクラウドサービス</li>
+<li>何がイイ検索機能か定義しづらい<br>
+(cf:wordでは文字色変更などが必要とされる)</li>
+</ul>
+</li>
+</ul>
+<h3>走りながら考える</h3>
+<ul>
+<li>ゴール設定後はできるだけ早く成果物を出す<ul>
+<li>どんな形であれ一旦仕上げる過程から学ぶことは多い</li>
+<li>正しいゴールの設定が製品開発そのものと同じくらい難しい場合もある</li>
+</ul>
+</li>
+<li>ゴールへの進歩条第は細かくチェック<ul>
+<li>期待されたいい影響が合ったかどうかを早い段階で確認  </li>
+<li>設定したゴールに問題点が発見されれば、素早く対処</li>
+</ul>
+</li>
+<li>再現率(リコール)の向上方法<ul>
+<li>再現率の数値化の難しさ<br>
+製品開発を終えていないと再現ができない  </li>
+</ul>
+</li>
+</ul>
+<h3>反省より改善</h3>
+<ul>
+<li>ゴールは完成形の定義ではなく、改善を積んでいく過程の目標<ul>
+<li>ゴールに到達できなくてもそれまでの成果が無駄にならない</li>
+<li>完成形が定義しにくい場合でも成果を出せる</li>
+</ul>
+</li>
+<li>
+<p>どんなに考えても解けない・予想できない問題があると理解</p>
+</li>
+<li>
+<p>HOT DOG<br>
+    空港二つを結んだルートを表示しちゃうことが、開発して初めて分かった</p>
+</li>
+<li>検索結果精度の定義</li>
+</ul>
+<h3>Bingで学んだこと</h3>
+<p>最善策をいつ実行し、いつしないかを判断する勇気・直感<br>
+大きな目標を見失うことなく、改善を積み重ねる胆力・知力</p>
+<ul>
+<li>並列分散処理<ul>
+<li>並列と分散がくっついている理由</li>
+</ul>
+</li>
+<li>機械学習の落とし穴<ul>
+<li>Molcolm Glodwell : Outliers</li>
+<li>アイスホッケー・オールスターの盲点
+(誕生日が早い人のほうが優秀(?))</li>
+</ul>
+</li>
+</ul>
+<h2>本質の捉え方</h2>
+<p>ミシガン大学院・素粒子物理学<br>
+ヒッグス粒子発見のための実験を終了する直前にシグナルを発見<br>
+→実験を延長したが、結局発見できず</p>
+<p>大学院の経験：<br>
+新しいことを発見したその事自体ではなく、その知識を深めていく過程そのものが大きな経験<br>
+「本質」の奥深さを認識する<br>
+少シグナルから大ビジョンを描く</p>
+<p>ありとあらゆる事業が崩壊・混乱している今
++ 出版(amazonの台頭)
++ メディア配信 (テレビ局&lt;Youtube)
++ タクシー &lt; Uber (安い)
++ 宿泊(Airbnb 一般人による宿泊所貸し)</p>
+<p>博士号を取ったことで、細かな習得を積み重ねていけば
+新しい時代にも分かるもの(本質)があるはずという自信を得た</p>
+<h2>マイクロソフトのサバイバル</h2>
+<p>これからどのような変化が起こるかは予想できない
+社長「一年での成果の少なさを嘆くがゆえに、十年で成し遂げた偉業をかるんじかるべからず」
+→積み重ねは大事だよ</p>
+        </article>
+      </div>
+    </div>
+  </body>
+</html>
