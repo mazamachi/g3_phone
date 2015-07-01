@@ -69,7 +69,7 @@ int main(int argc, char *argv[]){
 	if ( (fp_rec=popen("rec -q -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null","r")) ==NULL) {
 		die("popen:rec");
 	}
-	if ( (fp_play=popen("play -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null","w")) ==NULL) {
+	if ( (fp_play=popen("play -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null ","w")) ==NULL) {
 		die("popen:play");
 	}
 
@@ -115,8 +115,9 @@ int main(int argc, char *argv[]){
 			die("send");
 		}
 
-		memset(W,0,N*sizeof(complex double));
-		memset(Z,0,N*sizeof(complex double));
+		memset(W,0+0*I,N*sizeof(complex double));
+		memset(Z,0+0*I,N*sizeof(complex double));
+		memset(rec_data,0,sizeof(long)*send_len*2);
 		if(recv_all(s,(char *)recv_data,sizeof(long)*send_len*2)==-1){
 			die("recv");
 		}
