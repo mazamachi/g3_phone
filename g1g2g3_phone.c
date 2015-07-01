@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 
 #include "bandpass_fft.h"
+#include "send_recv_all.h"
 
 #define N 8192
 
@@ -73,14 +74,15 @@ int main(int argc, char *argv[]){
 	}
 
 	// sample_t *rec_data, *play_data;
-	int cut_low=300, cut_high=3400;
+	int cut_low=300, cut_high=5000;
 	int send_len = (cut_high-cut_low)*N/SAMPLING_FREQEUENCY;
 	sample_t * rec_data = malloc(sizeof(sample_t)*N);
-	// sample_t * send_data = malloc(sizeof(sample_t)*send_len);
-	// sample_t * recv_data = malloc(sizeof(sample_t)*send_len);
+	double * send_data = malloc(sizeof(double)*send_len*2);
+	double * recv_data = malloc(sizeof(double)*send_len*2);
 	sample_t * play_data = malloc(sizeof(sample_t)*N);
 	complex double * X = calloc(sizeof(complex double), N);
 	complex double * Y = calloc(sizeof(complex double), N);
+	complex double * Z = calloc(sizeof(complex double), N);
 
 	int re=0, r;
 	while(1){
@@ -103,13 +105,22 @@ int main(int argc, char *argv[]){
 		fft(X, Y, N);
 
 		// Yの一部を送る
-		if(send(s,Y+cut_low*N/SAMPLING_FREQEUENCY,send_len,0)==-1){
+		int i;
+		for(i=cut_low*N/SAMPLING_FREQEUENCY;i<cut_low*N/SAMPLING_FREQEUENCY+send_len;i++){
+			send_data[2*i]=(long)creal(Y[i]);
+			send_data[2*i+1]=(long)cimag(Y[i]);
+		}
+		if(send_all(s,(char *)send_data,sizeof(long)*send_len*2)==-1){
 			die("send");
 		}
 
-		memset(Y,0,N);
-		if(recv(s,Y+cut_low*N/SAMPLING_FREQEUENCY,send_len,0)==-1){
+		memset(Y,0,N*sizeof(complex double));
+		memset(X,0,N*sizeof(complex double));
+		if(recv_all(s,(char *)recv_data,sizeof(long)*send_len*2)==-1){
 			die("recv");
+		}
+		for(i=cut_low*N/SAMPLING_FREQEUENCY;i<cut_low*N/SAMPLING_FREQEUENCY+send_len;i++){
+			Y[i]=(double)send_data[2*i]+(double)send_data[2*i+1]*I;
 		}
 		// /* IFFT -> Z */
 		ifft(Y, X, N);
