@@ -12,6 +12,9 @@
 
 #include "bandpass_fft.h"
 #include "send_recv_all.h"
+#include "print_array.h"
+
+#include <time.h>
 
 #define N 1024
 
@@ -21,6 +24,7 @@
 // }
 
 // int fread_n(char *m, int size, int n, void *)
+
 
 int main(int argc, char *argv[]){
 	int n,m,n_recv;
@@ -85,28 +89,45 @@ int main(int argc, char *argv[]){
 	complex double * Z = calloc(sizeof(complex double), N);
 	complex double * W = calloc(sizeof(complex double), N);
 
-	int re=0, r;
+	sample_t re=0, r;
+	// time_t pre,now,mem;
+	clock_t passage;
+	double now,pre;
+	passage = clock();
+	now = (double)passage / CLOCKS_PER_SEC;
+	int i;
 	while(1){
 		// 必ずNバイト読む
 		re = 0;
 		while(re<N){
-			r=fread(rec_data+re,sizeof(sample_t),N/sizeof(sample_t)-re,fp_rec);
+			r=fread(rec_data+re,sizeof(sample_t),N-re,fp_rec);
 			if(r==-1) die("fread");
 			if(r==0) break;
 			re += r;
 		}
 		memset(rec_data+re,0,N-re);
+		// print_array(rec_data,N);
+
+		// 無音状態だったらスキップ
+		int num_low=0;
+		for(i=0;i<N;i++){
+			if(-10<rec_data[i] && rec_data[i]<10)
+				num_low++;
+		}
+		if(num_low>3*N/4)
+			continue;
+
 		// 複素数の配列に変換
 		sample_to_complex(rec_data, X, N);
 		// /* FFT -> Y */
 		fft(X, Y, N);
-
 		// Yの一部を送る
-		int i;
+
 		for(i=0;i<send_len;i++){
 			send_data[2*i]=(double)creal(Y[cut_low*N/SAMPLING_FREQEUENCY+i]);
 			send_data[2*i+1]=(double)cimag(Y[cut_low*N/SAMPLING_FREQEUENCY+i]);
 		}
+		// print_array_double(send_data,send_len*2);
 		if(send_all(s,(char *)send_data,sizeof(double)*send_len*2)==-1){
 			die("send");
 		}
@@ -127,7 +148,7 @@ int main(int argc, char *argv[]){
 		// // 標本の配列に変換
 		complex_to_sample(Z, play_data, N);
 		// /* 標準出力へ出力 */
-		fwrite(play_data,sizeof(sample_t),N/sizeof(sample_t),fp_play);
+		fwrite(play_data,sizeof(sample_t),N,fp_play);
 	}
 	close(s);
 }
