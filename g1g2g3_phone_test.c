@@ -107,24 +107,23 @@ int main(int argc, char *argv[]){
 
 		// Yの一部を送る
 		int i;
-		for(i=0;i<send_len;i++){
-			send_data[2*i]=(double)creal(Y[cut_low*N/SAMPLING_FREQEUENCY+i]);
-			send_data[2*i+1]=(double)cimag(Y[cut_low*N/SAMPLING_FREQEUENCY+i]);
+		for(i=cut_low*N/SAMPLING_FREQEUENCY;i<cut_low*N/SAMPLING_FREQEUENCY+send_len;i++){
+			send_data[2*i]=creal(Y[i]);
+			send_data[2*i+1]=cimag(Y[i]);
 		}
-		if(send_all(s,(char *)send_data,sizeof(double)*send_len*2)==-1){
-			die("send");
-		}
+		// if(send_all(s,(char *)send_data,sizeof(long)*send_len*2)==-1){
+		// 	die("send");
+		// }
 
-		memset(W,0.0+0.0*I,N*sizeof(complex double));
-		memset(Z,0.0+0.0*I,N*sizeof(complex double));
-		memset(rec_data,0,sizeof(long)*send_len*2);
-		if(recv_all(s,(char *)recv_data,sizeof(double)*send_len*2)==-1){
-			die("recv");
-		}
+		memset(W,0+0*I,N*sizeof(complex double));
+		memset(Z,0+0*I,N*sizeof(complex double));
+		// memset(play_data,0,sizeof(long)*send_len*2);
+		// if(recv_all(s,(char *)recv_data,sizeof(long)*send_len*2)==-1){
+		// 	die("recv");
+		// }
 
-		// printf("%d\n", cut_low*N/SAMPLING_FREQEUENCY);
-		for(i=0; i<send_len; i++){
-			W[cut_low*N/SAMPLING_FREQEUENCY+i]=(double)recv_data[2*i]+(double)recv_data[2*i+1]*I;
+		for(i=cut_low*N/SAMPLING_FREQEUENCY;i<cut_low*N/SAMPLING_FREQEUENCY+send_len;i++){
+			W[i]=(double)send_data[2*i]+(double)send_data[2*i+1]*I;
 		}
 		// /* IFFT -> Z */
 		ifft(W, Z, N);
@@ -133,9 +132,9 @@ int main(int argc, char *argv[]){
 		complex_to_sample(Z, play_data, N);
 		// /* 標準出力へ出力 */
 		// write_n(1, N, send_data);
-		// write_n(1, N, play_data);
+		write_n(1, N, play_data);
 
-		fwrite(play_data,sizeof(sample_t),N/sizeof(sample_t),fp_play);
+		// fwrite(play_data,sizeof(sample_t),N/sizeof(sample_t),fp_play);
 		// write(1,recv_data,n_recv);
 	}
 	close(s);
