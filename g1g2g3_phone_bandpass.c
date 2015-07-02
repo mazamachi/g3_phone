@@ -13,7 +13,7 @@
 #include "bandpass_fft.h"
 #include "send_recv_all.h"
 
-#define N 8192
+#define N 1024
 
 // void die(char *s){
 // 	perror(s);
