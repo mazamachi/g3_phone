@@ -108,14 +108,6 @@ int main(int argc, char *argv[]){
 		memset(rec_data+re,0,N-re);
 		// print_array(rec_data,N);
 
-		// 無音状態だったらスキップ
-		int num_low=0;
-		for(i=0;i<N;i++){
-			if(-10<rec_data[i] && rec_data[i]<10)
-				num_low++;
-		}
-		if(num_low>3*N/4)
-			continue;
 
 		// 複素数の配列に変換
 		sample_to_complex(rec_data, X, N);
@@ -147,6 +139,15 @@ int main(int argc, char *argv[]){
 
 		// // 標本の配列に変換
 		complex_to_sample(Z, play_data, N);
+
+		// 無音状態だったらスキップ
+		int num_low=0;
+		for(i=0;i<N;i++){
+			if(-5<play_data[i] && play_data[i]<5)
+				num_low++;
+		}
+		if(num_low>80*N/100)
+			continue;
 		// /* 標準出力へ出力 */
 		fwrite(play_data,sizeof(sample_t),N,fp_play);
 	}
