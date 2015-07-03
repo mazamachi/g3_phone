@@ -70,10 +70,10 @@ int main(int argc, char *argv[]){
 
 	FILE *fp_rec;
 	FILE *fp_play;
-	if ( (fp_rec=popen("rec -q -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null","r")) ==NULL) {
+	if ( (fp_rec=popen("rec --buffer 1024 -q -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null","r")) ==NULL) {
 		die("popen:rec");
 	}
-	if ( (fp_play=popen("play -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null ","w")) ==NULL) {
+	if ( (fp_play=popen("play --buffer 1024 -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null ","w")) ==NULL) {
 		die("popen:play");
 	}
 
@@ -96,6 +96,7 @@ int main(int argc, char *argv[]){
 	passage = clock();
 	now = (double)passage / CLOCKS_PER_SEC;
 	int i;
+	int counter=0;
 	while(1){
 		// 必ずNバイト読む
 		re = 0;
@@ -143,10 +144,10 @@ int main(int argc, char *argv[]){
 		// 無音状態だったらスキップ
 		int num_low=0;
 		for(i=0;i<N;i++){
-			if(-5<play_data[i] && play_data[i]<5)
+			if(-10<play_data[i] && play_data[i]<10)
 				num_low++;
 		}
-		if(num_low>80*N/100)
+		if(num_low>80*N/100||++counter%100==0)
 			continue;
 		// /* 標準出力へ出力 */
 		fwrite(play_data,sizeof(sample_t),N,fp_play);
