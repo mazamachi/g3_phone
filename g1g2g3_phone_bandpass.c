@@ -147,7 +147,7 @@ int main(int argc, char *argv[]){
 			if(-10<play_data[i] && play_data[i]<10)
 				num_low++;
 		}
-		if(num_low>80*N/100||++counter%100==0)
+		if(num_low>80*N/100||++counter%50==0)
 			continue;
 		// /* 標準出力へ出力 */
 		fwrite(play_data,sizeof(sample_t),N,fp_play);
