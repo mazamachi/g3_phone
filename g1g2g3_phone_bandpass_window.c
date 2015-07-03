@@ -70,10 +70,10 @@ int main(int argc, char *argv[]){
 
 	FILE *fp_rec;
 	FILE *fp_play;
-	if ( (fp_rec=popen("rec --buffer 1024 -q -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null","r")) ==NULL) {
+	if ( (fp_rec=popen("rec -q -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null","r")) ==NULL) {
 		die("popen:rec");
 	}
-	if ( (fp_play=popen("play --buffer 1024 -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null ","w")) ==NULL) {
+	if ( (fp_play=popen("play -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null ","w")) ==NULL) {
 		die("popen:play");
 	}
 
@@ -81,9 +81,11 @@ int main(int argc, char *argv[]){
 	int cut_low=300, cut_high=5000;
 	int send_len = (cut_high-cut_low)*N/SAMPLING_FREQEUENCY;
 	sample_t * rec_data = malloc(sizeof(sample_t)*N);
+	double * window_data = malloc(sizeof(double)*N);
 	double * send_data = malloc(sizeof(double)*send_len*2);
 	double * recv_data = malloc(sizeof(double)*send_len*2);
 	sample_t * play_data = malloc(sizeof(sample_t)*N);
+	sample_t * pre_data = malloc(sizeof(sample_t)*N/2);
 	complex double * X = calloc(sizeof(complex double), N);
 	complex double * Y = calloc(sizeof(complex double), N);
 	complex double * Z = calloc(sizeof(complex double), N);
@@ -99,18 +101,26 @@ int main(int argc, char *argv[]){
 	while(1){
 		// 必ずNバイト読む
 		re = 0;
-		while(re<N){
-			r=fread(rec_data+re,sizeof(sample_t),N-re,fp_rec);
+		// オーバーラップ
+		while(re<N/2){
+			r=fread(&rec_data[N/2+re-1],sizeof(sample_t),N/2-re,fp_rec);
 			if(r==-1) die("fread");
 			if(r==0) break;
 			re += r;
 		}
-		memset(rec_data+re,0,N-re);
+		// memset(rec_data+re,0,N-re);
 		// print_array(rec_data,N);
 
+		// print_array(rec_data,N);
+
+		// 窓関数(ハミング窓)
+		for (i = 0; i < N; ++i)	{
+			window_data[i] = (0.54-0.46*cos(2*M_PI*i/(N-1)))*rec_data[i];
+		}
+		memcpy(rec_data,&rec_data[N/2-1],N/2);
 
 		// 複素数の配列に変換
-		sample_to_complex(rec_data, X, N);
+		sample_to_complex_double(window_data, X, N);
 		// /* FFT -> Y */
 		fft(X, Y, N);
 		// Yの一部を送る
@@ -139,11 +149,17 @@ int main(int argc, char *argv[]){
 
 		// // 標本の配列に変換
 		complex_to_sample(Z, play_data, N);
+				// オーバーラップを戻す
+		for(i=0;i<N/2;i++){
+			play_data[i] += pre_data[i];
+		}
+		memcpy(pre_data,&play_data[N/2-1],N/2);
+
 
 		// 無音状態だったらスキップ
 		int num_low=0;
 		for(i=0;i<N;i++){
-			if(-20<play_data[i] && play_data[i]<20)
+			if(-5<play_data[i] && play_data[i]<5)
 				num_low++;
 		}
 		if(num_low>80*N/100)

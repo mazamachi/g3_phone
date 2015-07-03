@@ -61,10 +61,26 @@ void sample_to_complex(sample_t * s,
 	long i;
 	for (i = 0; i < n; i++) X[i] = s[i];
 }
+/* 標本(整数)を複素数へ変換 */
+void sample_to_complex_double(double * s, 
+					complex double * X, 
+					long n) {
+	long i;
+	for (i = 0; i < n; i++) X[i] = s[i];
+}
 
 /* 複素数を標本(整数)へ変換. 虚数部分は無視 */
 void complex_to_sample(complex double * X, 
 					 sample_t * s, 
+					 long n) {
+	long i;
+	for (i = 0; i < n; i++) {
+		s[i] = creal(X[i]);
+	}
+}
+/* 複素数を標本(整数)へ変換. 虚数部分は無視 */
+void complex_to_sample_double(complex double * X, 
+					 double * s, 
 					 long n) {
 	long i;
 	for (i = 0; i < n; i++) {
