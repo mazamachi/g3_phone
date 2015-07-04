@@ -98,31 +98,39 @@ int main(int argc, char *argv[]){
 	passage = clock();
 	now = (double)passage / CLOCKS_PER_SEC;
 	int i;
+	memset(rec_data,0,N);
+	memset(pre_data,0,N);
+	// printf("connect\n");
 	while(1){
 		// 必ずNバイト読む
 		re = 0;
 		// オーバーラップ
 		while(re<N/2){
-			r=fread(&rec_data[N/2+re-1],sizeof(sample_t),N/2-re,fp_rec);
+			r=fread(rec_data+N/2,sizeof(sample_t),N/2-re,fp_rec);
 			if(r==-1) die("fread");
 			if(r==0) break;
 			re += r;
 		}
-		// memset(rec_data+re,0,N-re);
+		memset(rec_data+N/2+re,0,N/2-re);
+		// printf("read\n");
 		// print_array(rec_data,N);
 
 		// print_array(rec_data,N);
 
 		// 窓関数(ハミング窓)
 		for (i = 0; i < N; ++i)	{
-			window_data[i] = (0.54-0.46*cos(2*M_PI*i/(N-1)))*rec_data[i];
+			window_data[i] = (0.54-0.46*cos(2*M_PI*i/(double)(N-1)))*rec_data[i];
 		}
-		memcpy(rec_data,&rec_data[N/2-1],N/2);
+		memcpy(rec_data,rec_data+N/2,sizeof(sample_t)*N/2);
+		// print_array(rec_data,N/2);
+		// printf("window\n");
 
 		// 複素数の配列に変換
 		sample_to_complex_double(window_data, X, N);
+		// printf("complex\n");
 		// /* FFT -> Y */
 		fft(X, Y, N);
+		// printf("fft\n");
 		// Yの一部を送る
 
 		for(i=0;i<send_len;i++){
@@ -136,7 +144,7 @@ int main(int argc, char *argv[]){
 
 		memset(W,0.0+0.0*I,N*sizeof(complex double));
 		memset(Z,0.0+0.0*I,N*sizeof(complex double));
-		memset(rec_data,0,sizeof(long)*send_len*2);
+		// memset(rec_data,0,sizeof(long)*send_len*2);
 		if(recv_all(s,(char *)recv_data,sizeof(double)*send_len*2)==-1){
 			die("recv");
 		}
@@ -145,27 +153,33 @@ int main(int argc, char *argv[]){
 			W[cut_low*N/SAMPLING_FREQEUENCY+i]=(double)recv_data[2*i]+(double)recv_data[2*i+1]*I;
 		}
 		// /* IFFT -> Z */
-		ifft(W, Z, N);
+		ifft(Y, Z, N);
+		// printf("ifft\n");
 
 		// // 標本の配列に変換
 		complex_to_sample(Z, play_data, N);
+		// printf("sample\n");
 				// オーバーラップを戻す
 		for(i=0;i<N/2;i++){
 			play_data[i] += pre_data[i];
 		}
-		memcpy(pre_data,&play_data[N/2-1],N/2);
-
+		memcpy(pre_data,play_data+N/2,N/2);
+		// printf("de overlap\n");
 
 		// 無音状態だったらスキップ
 		int num_low=0;
-		for(i=0;i<N;i++){
+		for(i=0;i<N/2;i++){
 			if(-5<play_data[i] && play_data[i]<5)
 				num_low++;
 		}
-		if(num_low>80*N/100)
+		if(num_low>80*N/2/100)
 			continue;
+		// printf("not skip\n");
 		// /* 標準出力へ出力 */
-		fwrite(play_data,sizeof(sample_t),N,fp_play);
+		// write(1,play_data,N/2);
+		// print_array(play_data,N/2);
+		// printf("write\n");
+		fwrite(play_data,sizeof(sample_t),N/2,fp_play);
 	}
 	close(s);
 }
