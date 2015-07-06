@@ -11,8 +11,8 @@
 #include "bandpass_fft.h"
 #include <pthread.h>
 #include "send_recv_all.h"
-
-#define N 1024
+#include "print_array.h"
+#define N 8192
 
 struct timeval start_fread, start_send, start_recv, start_fwrite, 
   stop_fread, stop_send, stop_recv, stop_fwrite, loop_start, loop_stop;
@@ -27,7 +27,7 @@ void phone_recsend(void *vs){
   int* ps = (int *)vs;
   int s = *ps;
   FILE *fp_rec;
-  if ( (fp_rec=popen("rec -q -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null","r")) ==NULL) {
+  if ( (fp_rec=popen("rec -q -t raw -b 16 -c 1 -e s -r 44100 -","r")) ==NULL) {
     die("popen:rec");
   }
   int cut_low=300, cut_high=5000;
@@ -41,7 +41,7 @@ void phone_recsend(void *vs){
   int i;
   memset(rec_data,0,N);
   while(1){
-    printf("phone loop\n");
+    // printf("phone loop\n");
     // 必ずNバイト読む
     re = 0;
     // オーバーラップ
@@ -52,13 +52,20 @@ void phone_recsend(void *vs){
       re += r;
     }
     memset(rec_data+N/2+re,0,N/2-re);
-
-
     // 窓関数(ハミング窓)
     for (i = 0; i < N; ++i) {
       window_data[i] = (0.54-0.46*cos(2*M_PI*i/(double)(N-1)))*rec_data[i];
     }
     memcpy(rec_data,rec_data+N/2,sizeof(sample_t)*N/2);
+    // 無音状態だったらスキップ
+    // int num_low=0;
+    // // print_array_double(window_data,N);
+    // for(i=0;i<N;i++){
+    //   if(-20<window_data[i] && window_data[i]<20)
+    //     num_low++;
+    // }
+    // if(num_low>80*N/100)
+    //   continue;
 
     // 複素数の配列に変換
     sample_to_complex_double(window_data, X, N);
@@ -74,6 +81,7 @@ void phone_recsend(void *vs){
     if(send_all(s,(char *)send_data,sizeof(double)*send_len*2)==-1){
       die("send");
     }
+    memset(send_data,0,sizeof(double)*send_len*2);
   }
 }
 void phone_recvplay(void *vs){
@@ -81,7 +89,7 @@ void phone_recvplay(void *vs){
   int s = *ps;
   int i;
   FILE *fp_play;
-  if ( (fp_play=popen("play -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null ","w")) ==NULL) {
+  if ( (fp_play=popen("play --buffer 128 -t raw -b 16 -c 1 -e s -r 44100 - ","w")) ==NULL) {
     die("popen:play");
   }
   int cut_low=300, cut_high=5000;
@@ -116,15 +124,19 @@ void phone_recvplay(void *vs){
     memcpy(pre_data,play_data+N/2,N/2);
     // 無音状態だったらスキップ
     int num_low=0;
+    // print_array_double(window_data,N);
     for(i=0;i<N;i++){
-      if(-10<play_data[i] && play_data[i]<10)
+      if(-20<play_data[i] && play_data[i]<20)
         num_low++;
     }
     if(num_low>80*N/100)
       continue;
+
     // /* 標準出力へ出力 */
     // write(1,play_data,N/2);
     fwrite(play_data,sizeof(sample_t),N/2,fp_play);
+    memset(play_data,0,sizeof(sample_t)*N);
+    memset(recv_data,0,sizeof(double)*send_len*2);
   }
 }
 //sends a buffer of length len
