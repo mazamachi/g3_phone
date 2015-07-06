@@ -1,19 +1,45 @@
-<form class="form-inline" method="post" action="/server">
+<h2>Server</h2>
+<form class="form" method="post" action="/server">
   <div class="form-group">
+    <label for="Sname">your name</label>
+    <input type="text" class="form-control" id="Sname" placeholder="hoge" name="name">
     <label for="Sport">port</label>
     <input type="text" class="form-control" id="Sport" placeholder="5000" name="port">
+    <label for="Slang">your language</label> <br>
+    <select name="lang" class="selectpicker" id="Slang" data-width="auto">
+      <%LANG_CODES.keys.each do |lang_name|%>
+      <option value="<%=lang_name%>" <%="selected" if lang_name=="Japanese"%>><%=lang_name%></option>
+      <%end%>
+    </select>
   </div>
-  <button type="submit" class="btn btn-default">wait for calling</button>
+  <button type="submit" class="btn btn-primary">wait for calling</button>
 </form>
 
-<form class="form-inline" method="post" action="/client">
+<%if @waiting_s%>
+<div class="alert alert-info" role="alert">
+  <p><b><%=@waiting_s.name%></b> is waiting you.</p> <br>
+  <!-- <button class="btn btn-primary id="callhim"">Call him</button> -->
+  <p>ip:<%=@waiting_s.ip%></p>
+  <p>port:<%=@waiting_s.port%></p>
+</div>
+<%end%>
+
+<h2>Client</h2>
+<form class="form" method="post" action="/client">
   <div class="form-group">
+    <label for="Cname">name</label>
+    <input type="text" class="form-control" id="Cname" placeholder="5000" name="name">
     <label for="Cport">port</label>
     <input type="text" class="form-control" id="Cport" placeholder="5000" name="port">
-  </div>
-  <div class="form-group">
     <label for="ip">ip address</label>
     <input type="text" class="form-control" id="ip" placeholder="*.*.*.*" name="ip">
+    <label for="Clang">your language</label> <br>
+    <select name="lang" class="selectpicker" id="Clang" data-width="auto">
+      <%LANG_CODES.keys.each do |lang_name|%>
+      <option value="<%=lang_name%>" <%="selected" if lang_name=="Japanese"%>><%=lang_name%></option>
+      <%end%>
+    </select>
   </div>
-  <button type="submit" class="btn btn-default" >call</button>
+  <button type="submit" class="btn btn-primary" >call</button>
 </form>
+
