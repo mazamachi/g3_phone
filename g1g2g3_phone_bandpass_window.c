@@ -42,11 +42,11 @@ int main(int argc, char *argv[]){
 		if(bind(ss, (struct sockaddr *)&addr, sizeof(addr)) == -1){
 			die("bind");
 		}
-
+		// printf("listenning\n");
 		if(listen(ss,10) == -1){
 			die("listen");
 		}
-
+		// printf("%d\n",ss);
 		socklen_t len = sizeof(struct sockaddr_in);
 		s = accept(ss, (struct sockaddr *)&client_addr, &len);
 
@@ -153,7 +153,7 @@ int main(int argc, char *argv[]){
 			W[cut_low*N/SAMPLING_FREQEUENCY+i]=(double)recv_data[2*i]+(double)recv_data[2*i+1]*I;
 		}
 		// /* IFFT -> Z */
-		ifft(Y, Z, N);
+		ifft(W, Z, N);
 		// printf("ifft\n");
 
 		// // 標本の配列に変換
@@ -165,19 +165,19 @@ int main(int argc, char *argv[]){
 		}
 		memcpy(pre_data,play_data+N/2,N/2);
 		// printf("de overlap\n");
-
+		// print_array(play_data,N);
 		// 無音状態だったらスキップ
 		int num_low=0;
-		for(i=0;i<N/2;i++){
-			if(-5<play_data[i] && play_data[i]<5)
+		for(i=0;i<N;i++){
+			if(-10<play_data[i] && play_data[i]<10)
 				num_low++;
 		}
-		if(num_low>80*N/2/100)
+		if(num_low>80*N/100)
 			continue;
 		// printf("not skip\n");
 		// /* 標準出力へ出力 */
 		// write(1,play_data,N/2);
-		// print_array(play_data,N/2);
+		// print_array(play_data,N);
 		// printf("write\n");
 		fwrite(play_data,sizeof(sample_t),N/2,fp_play);
 	}

@@ -4,14 +4,14 @@ require 'oauth'
 require 'json'
 require "sinatra/base"
 require "sinatra/streaming"
+require 'sinatra-websocket'
 # th = nil
 
 set :sessions, true
 enable :sessions
+set :server, 'thin'
+set :sockets, []
 
-configure :development do
-  set :server, :thin
-end
 
 helpers do
   include Rack::Utils
@@ -25,24 +25,9 @@ configure do
 end
 
 before do
-  if session[:access_token]
-    @twitter=Twitter::REST::Client.new do |config|
-      config.consumer_key = KEY
-      config.consumer_secret = SECRET
-      config.access_token = session[:access_token]
-      config.access_token_secret = session[:access_token_secret]
-    end
-  else
-    @twitter = nil
-  end
 
 end
 
-def base_url
-  default_port = (request.scheme == "http") ? 80 : 443
-  port = (request.port == default_port) ? "" : ":#{request.port.to_s}"
-  "#{request.scheme}://#{request.host}#{port}"
-end
 
 get '/'  do
   @title = "Top"
@@ -53,10 +38,44 @@ post '/server' do
   # $th = Thread.new do
   #   system("./g1g2g3_phone #{params['port']}")
   # end
-  $io = IO.popen("./g1g2g3_phone #{params['port']}", "r")
+  $io = IO.popen("./g1g2g3_phone_chat #{params['port']}", "r")
   session[:pid] = $io.pid
   session[:status] = "wait"
-  redirect '/'
+  redirect '/talk'
+end
+
+post '/client' do
+  p params
+  system("./g1g2g3_phone_chat #{params['port']} #{params['ip']}")
+  $io = IO.popen("./g1g2g3_phone_chat #{params['port']}", "r")
+  session[:pid] = $io.pid
+  session[:status] = "wait"
+  redirect '/talk'
+end
+
+get '/sendrecv' do
+  if !request.websocket?
+    erb :index
+  else
+    puts "sendrecv"
+    request.websocket do |ws|
+      ws.onopen do
+        ws.send("Hello World!")
+        settings.sockets << ws
+      end
+      ws.onmessage do |msg|
+        EM.next_tick { settings.sockets.each{|s| s.send(msg) } }
+      end
+      ws.onclose do
+        warn("websocket closed")
+        settings.sockets.delete(ws)
+      end
+    end
+  end
+end
+
+get '/talk' do 
+  erb :talk
 end
 
 get '/client_test' do
@@ -68,23 +87,15 @@ get '/client_test' do
     end
   end
 end
-get '/stream_test' do
- stream(:keep_open) do |out|
-   out << "It's gonna be legen -\n"
-   sleep 5
-   out << " (wait for it) \n"
-   sleep 10
-   out << "- dary!\n"
- end
-end
+
 
 get '/server' do
   # $th = Thread.new do
   #   system("./g1g2g3_phone #{params['port']}")
   # end
   stream do |outp|
-    $io=IO.popen("./g1g2g3_phone #{params['port']}", 'r')
-    while line=io.gets
+    $io=IO.popen("./g1g2g3_phone_chat #{params['port']}", 'r')
+    while line=$io.gets
       puts line
       outp << line
     end
@@ -104,34 +115,3 @@ get '/stop' do
   p $io
 end
 
-post '/client' do
-  p params
-  system("./g1g2g3_phone #{params['ip']} #{params['Cport']}")
-end
-
-get '/profile' do 
-  @title = "Profile"
-  erb :profile
-end
-
-get '/products' do 
-  @title = "Products"
-  erb :products
-end
-
-get '/links' do 
-  @title = "links"
-  erb :links
-end
-
-get '/lecture/:folder/:name' do
-  html params[:folder]+"/"+params['name']
-end
-
-get '/private/:name' do
-  html "private/"+params['name']
-end
-
-def html(view)
-  File.read(File.join('views', "#{view.to_s}.html"))
-end
