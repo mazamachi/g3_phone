@@ -165,7 +165,7 @@ int main(int argc, char *argv[]){
 		}
 		memcpy(pre_data,play_data+N/2,N/2);
 		// printf("de overlap\n");
-		// print_array(play_data,N);
+		//print_array(play_data,N);
 		// 無音状態だったらスキップ
 		int num_low=0;
 		for(i=0;i<N;i++){
