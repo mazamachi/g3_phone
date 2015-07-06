@@ -27,7 +27,7 @@ void phone_recsend(void *vs){
   int* ps = (int *)vs;
   int s = *ps;
   FILE *fp_rec;
-  if ( (fp_rec=popen("rec --buffer 32 -q -t raw -b 16 -c 1 -e s -r 44100 - ","r")) ==NULL) {
+  if ( (fp_rec=popen("rec --buffer 32 -q -t raw -b 16 -c 1 -e s -r 44100 - 2> /dev/null","r")) ==NULL) {
     die("popen:rec");
   }
   int cut_low=300, cut_high=5000;

@@ -15,14 +15,6 @@
   <button type="submit" class="btn btn-primary">wait for calling</button>
 </form>
 
-<%if @waiting_s%>
-<div class="alert alert-info" role="alert">
-  <p><b><%=@waiting_s.name%></b> is waiting you.</p> <br>
-  <!-- <button class="btn btn-primary id="callhim"">Call him</button> -->
-  <p>ip:<%=@waiting_s.ip%></p>
-  <p>port:<%=@waiting_s.port%></p>
-</div>
-<%end%>
 
 <h2>Client</h2>
 <form class="form" method="post" action="/client">

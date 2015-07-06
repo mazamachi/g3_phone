@@ -86,16 +86,16 @@ LANG_CODES = {
 "Swedish"=> {web:"sv-SE", ms: "sv" },
 "Turkish"=> {web:"tr", ms: "tr" }
 }
-ActiveRecord::Base.establish_connection(
-  adapter:  "postgresql",
-  host:     "ec2-54-204-27-193.compute-1.amazonaws.com",
-  username: "jknydirlbacmxi",
-  password: "AeDlIHmI3Uq66L9t_KH0L_VJCy",
-  database: "d5h2aeoaarepjm",
-)
-ActiveRecord::Base.default_timezone = :local
-class Server < ActiveRecord::Base
-end
+# ActiveRecord::Base.establish_connection(
+#   adapter:  "postgresql",
+#   host:     "ec2-54-204-27-193.compute-1.amazonaws.com",
+#   username: "jknydirlbacmxi",
+#   password: "AeDlIHmI3Uq66L9t_KH0L_VJCy",
+#   database: "d5h2aeoaarepjm",
+# )
+# ActiveRecord::Base.default_timezone = :local
+# class Server < ActiveRecord::Base
+# end
 
 
 helpers do
@@ -116,7 +116,7 @@ end
 
 get '/'  do
   @title = "Top"
-  @waiting_s = Server.find_by(status: 1)
+  # @waiting_s = Server.find_by(status: 1)
   erb :index
 end
 
@@ -124,12 +124,12 @@ post '/server' do
   # $th = Thread.new do
   #   system("./g1g2g3_phone #{params['port']}")
   # end
-  s = Server.find_or_create_by(name:params[:name])
-  p s.ip = request.ip
-  s.port = params[:port]
-  s.status = 1
-  s.save
-  $io = IO.popen("./g1g2g3_phone_chat #{params['port']}", "r")
+  # s = Server.find_or_create_by(name:params[:name])
+  # p s.ip = request.ip
+  # s.port = params[:port]
+  # s.status = 1
+  # s.save
+  $io = IO.popen("./satish_phone #{params['port']}", "r")
   session[:name] = params[:name]
   session[:lang] = params[:lang]
   session[:pid] = $io.pid
@@ -139,8 +139,8 @@ end
 
 post '/client' do
   # p params
-  system("./g1g2g3_phone_chat #{params['port']} #{params['ip']}")
-  $io = IO.popen("./g1g2g3_phone_chat #{params['port']}", "r")
+  # system("./satish_phone #{params['port']} #{params['ip']}")
+  $io = IO.popen("./phone #{params['port']} #{params['ip']}", "r")
   session[:name] = params[:name]
   session[:lang] = params[:lang]
   session[:pid] = $io.pid
@@ -169,6 +169,9 @@ get '/sendrecv' do
   end
 end
 
+get '/reset' do
+
+end
 get '/talk' do 
   @name = session[:name]
   @lang = session[:lang]
@@ -191,7 +194,7 @@ get '/server' do
   #   system("./g1g2g3_phone #{params['port']}")
   # end
   stream do |outp|
-    $io=IO.popen("./g1g2g3_phone_chat #{params['port']}", 'r')
+    $io=IO.popen("./phone #{params['port']}", 'r')
     while line=$io.gets
       puts line
       outp << line
@@ -207,9 +210,9 @@ end
 get '/stop' do 
   p $io
   p session
-  s = Server.find_or_create_by(name:session[:name])
-  s.status=0
-  s.save
+  # s = Server.find_or_create_by(name:session[:name])
+  # s.status=0
+  # s.save
   Process.kill("KILL", session[:pid]) #stop the system process
   # $io.close
   # Thread.kill($th)
