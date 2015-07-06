@@ -226,6 +226,17 @@ int main(int argc, char** argv)
   int s = sock;
   ret0 = pthread_create(&thread_recsend,NULL,(void *)phone_recsend,(void *) & s);
   ret1 = pthread_create(&thread_recvplay,NULL,(void *)phone_recvplay,(void *)&s);
+
+  ret0 = pthread_join(thread_recsend,NULL);
+  if (ret1 != 0) {
+      die("cannot join thread 0");
+  }
+
+  ret1 = pthread_join(thread_recvplay,NULL);
+  if (ret1 != 0) {
+      die("cannot join thread 1");
+  }
+
  
 
   //printf("NUMBER OF TIMES = %d\n",k);
