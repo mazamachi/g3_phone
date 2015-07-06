@@ -136,7 +136,11 @@ void phone_recvplay(void *vs){
     // write(1,play_data,N/2);
     fwrite(play_data,sizeof(sample_t),N/2,fp_play);
     memset(play_data,0,sizeof(sample_t)*N);
+<<<<<<< HEAD
     memset(recv_data,0,sizeof(double)*send_len*2);
+=======
+    
+>>>>>>> cd251430faef53772be9846b6731127f78d53cde
   }
 }
 //sends a buffer of length len

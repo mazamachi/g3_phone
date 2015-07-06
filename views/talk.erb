@@ -1,30 +1,156 @@
-<h1>Simple Echo & Chat Server</h1>
-<form id="form">
+<!-- <h2>Chat</h2> -->
+<!-- <form id="form">
 <input type="text" id="input" value="send a message"></input>
 </form>
+ -->
+<a href="/stop" class="btn btn-warning btn-lg">Stop Talking</a>
+<h2>Talk History</h2>
 <div id="msgs"></div>
+<div class="recPlayer">
+    <div class="recPlayer__tools">
+        <button class="recPlayer__recBtn">録音</button>
+    </div>
+    <div class="recPlayer__results">
+        <ul></ul>
+    </div>
+</div>
+
 
 <script type="text/javascript">
-    window.onload = function(){
-      (function(){
-        var show = function(el){
-          return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
-        }(document.getElementById('msgs'));
+	var ws;
+	ws = new WebSocket("ws://g3-server.herokuapp.com/sendrecv");
+	var speaking_lang;
 
-        var ws       = new WebSocket('ws://' + window.location.host + '/sendrecv');
-        ws.onopen    = function()  { show('websocket opened'); };
-        ws.onclose   = function()  { show('websocket closed'); }
-        ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
+	window.onload = function(){
+		(function(){
+			var show = function(el){
+				return function(msg){ el.innerHTML = msg + '<br />' + el.innerHTML; }
+			}(document.getElementById('msgs'));
 
-        var sender = function(f){
-          var input     = document.getElementById('input');
-          input.onclick = function(){ input.value = "" };
-          f.onsubmit    = function(){
-            ws.send(input.value);
-            input.value = "send a message";
-            return false;
-          }
-        }(document.getElementById('form'));
-      })();
-    }
-  </script>
+			// var ws       = new WebSocket('ws://' + window.location.host + '/sendrecv');
+			// ws = new WebSocket("ws://g3-server.herokuapp.com/sendrecv");
+			ws.onopen    = function()  { show('websocket opened'); };
+			ws.onclose   = function()  { show('websocket closed'); }
+			// ws.onmessage = function(m) { show('websocket message: ' +  m.data); };
+			ws.onmessage = function(m) { 
+				// var foo = 'abc123def456ghi';
+				console.log(m);
+				var ar = m.data.match(/^([^:]*): (.+)\((.+)\)$/);
+				console.log(ar);
+				if (ar==null){
+					show(m.data);
+					return;
+				}
+				// m.data
+				$.get("/translate", { text: ar[2], from: ar[3], to: '<%=LANG_CODES[@lang][:ms]%>'},
+				  function(data){
+				  	console.log(data);
+				  	show(ar[1]+': '+data+' (translated from '+ar[3]+')');
+				    // alert("Data Loaded: " + data);
+			  });
+				// show(m.data); 
+			};
+
+			var sender = function(f){
+				var input     = document.getElementById('input');
+				input.onclick = function(){ input.value = "" };
+				f.onsubmit    = function(){
+					ws.send('<%=@name%>: '+input.value);
+					input.value = "send a message";
+					return false;
+				}
+			}(document.getElementById('form'));
+		})();
+	}
+	window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
+	var Recorder = {
+			recognition : null,
+			init: function(){
+					var o = this;
+					o.recognition = new SpeechRecognition();
+					o.recognition.lang = '<%=LANG_CODES[@lang][:web]%>';
+					o.recognition.continuous = true;
+			},
+			recStart: function(){
+					var o = this;
+					o.recognition.start();
+			},
+			recStop: function(){
+					var o = this;
+					o.recognition.stop();
+			},
+			getRecText: function(results, resultIndex){
+					var text;
+					for(var i = resultIndex; i < results.length; i++){
+							var result = results.item(i);
+							if(result.final === true || result.isFinal === true){
+									text = result.item(0).transcript;
+							}
+					}
+					return text;
+			}
+	}
+	var Speeker = {
+			synthes: null,
+			init: function(){
+					var o = this;
+					o.synthes = new SpeechSynthesisUtterance();
+					o.synthes.lang = "ja-JP"
+			},
+			say: function(msgText){
+					var o = this;
+					o.synthes.text = msgText;
+					speechSynthesis.speak(o.synthes);
+			}
+	}
+	var View = {
+			getResultItem: function(text){
+					var el = document.createElement('li');
+					el.textContent = text;
+					return el;
+			}
+	}
+	var App = {
+			el: {
+					recBtn: document.querySelector('.recPlayer__recBtn'),
+					resultList: document.querySelector('.recPlayer__results ul')
+			},
+			status: {
+					nowRec: false,
+					recorderText: ''
+			},
+			init: function(){
+					var o = this;
+					Recorder.init();
+					Speeker.init();
+					Recorder.recognition.addEventListener('start', function(){
+							o.status.nowRec = true;
+							o.el.recBtn.textContent = '停止';
+					});
+					Recorder.recognition.addEventListener('end', function(){
+							o.status.nowRec = false;
+							o.el.recBtn.textContent = '録音';
+					});
+					Recorder.recognition.addEventListener('result', function(event){
+							var text = Recorder.getRecText(event.results, event.resultIndex);
+							// o.el.resultList.insertBefore(
+							// 		View.getResultItem(text),
+							// 		o.el.resultList.firstChild
+							// );
+							// ws.send('<%=@name%>: '+input.value);
+							ws.send('<%=@name%>: '+text+'(<%=LANG_CODES[@lang][:ms]%>)');
+							// Speeker.say(text);
+
+					});
+					o.el.recBtn.addEventListener('click', function(){
+							if(o.status.nowRec){
+									Recorder.recStop();
+							}
+							else{
+									Recorder.recStart();
+							}
+					});
+			}
+	}
+	App.init();
+	</script>
