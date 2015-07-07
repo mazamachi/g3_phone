@@ -130,6 +130,7 @@ post '/server' do
   # s.status = 1
   # s.save
   # system("./phone #{params['port']}")
+  p params['port']
   p $io = IO.popen("./phone #{params['port']}", "r")
   session[:name] = params[:name]
   session[:lang] = params[:lang]
@@ -141,7 +142,7 @@ end
 post '/client' do
   # p params
   # system("./phone #{params['port']} #{params['ip']}")
-  $io = IO.popen("./phone #{params['port']} #{params['ip']}", "r")
+  $io = IO.popen("./phone #{params['ip']} #{params['port']}", "r")
   session[:name] = params[:name]
   session[:lang] = params[:lang]
   session[:pid] = $io.pid
