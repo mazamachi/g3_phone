@@ -38,7 +38,7 @@
 				var ar = m.data.match(/^([^:]*): (.+)\((.+)\)$/);
 				console.log(ar);
 				if (ar==null){
-					show(m.data);
+					// show(m.data);
 					return;
 				}
 				// m.data
@@ -62,6 +62,9 @@
 			}(document.getElementById('form'));
 		})();
 	}
+	setInterval(function(){
+		ws.send("don't close")
+	}/*定期的に呼び出す関数名*/, 1000/*呼び出す間隔*/);
 	window.SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
 	var Recorder = {
 			recognition : null,
@@ -142,6 +145,7 @@
 							// Speeker.say(text);
 
 					});
+					Recorder.recStart();
 					o.el.recBtn.addEventListener('click', function(){
 							if(o.status.nowRec){
 									Recorder.recStop();
