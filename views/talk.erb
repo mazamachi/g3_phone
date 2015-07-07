@@ -128,11 +128,11 @@
 					Speeker.init();
 					Recorder.recognition.addEventListener('start', function(){
 							o.status.nowRec = true;
-							o.el.recBtn.textContent = '停止';
+							o.el.recBtn.textContent = 'stop';
 					});
 					Recorder.recognition.addEventListener('end', function(){
 							o.status.nowRec = false;
-							o.el.recBtn.textContent = '録音';
+							o.el.recBtn.textContent = 'rec';
 					});
 					Recorder.recognition.addEventListener('result', function(event){
 							var text = Recorder.getRecText(event.results, event.resultIndex);
